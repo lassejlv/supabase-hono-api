@@ -5,7 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN bun install
+RUN bun run compile
 
 EXPOSE ${PORT}
 
-CMD ["bun", "run", "start"]
+CMD ["./build/server"]
