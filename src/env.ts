@@ -6,6 +6,7 @@ export const env = createEnv({
     PORT: z.string(),
     SUPABASE_DOMAIN: z.string(),
     SUPABASE_ANON_KEY: z.string(),
+    SUPABASE_PROJECT_ID: z.string(),
   },
   runtimeEnv: process.env,
 });
