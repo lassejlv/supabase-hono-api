@@ -11,9 +11,10 @@
   },
   "scripts": {
     "dev": "bun --watch src/index.ts",
-    "types": "npx supabase gen types typescript --project-id skwgjoavydbfeqfjipie > src/types/database.types.ts"
+    "types": "supabase gen types typescript --project-id skwgjoavydbfeqfjipie > src/types/database.types.ts"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.1",
     "@supabase/supabase-js": "^2.42.7",
     "@t3-oss/env-core": "^0.10.1",
     "hono": "^4.2.9",

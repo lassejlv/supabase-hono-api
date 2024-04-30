@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import { client } from "../supabase";
+import { zValidator } from "@hono/zod-validator";
+import { UserSchemaCreate, UserSchemaUpdate } from "../types/zod";
 
 const router = new Hono();
 
@@ -26,27 +28,44 @@ router.get("/:id", async (c) => {
   }
 });
 
-router.post("/", async (c) => {
-  try {
-    const { name, age } = await c.req.json();
+router.post("/", zValidator("json", UserSchemaCreate), async (c) => {
+  const { name, age } = await c.req.valid("json");
 
-    if (!name || !age) {
-      c.status(400);
-      return c.json({ error: "Name and age are required" });
-    }
+  const { error } = await client.from("users").insert({
+    name,
+    age,
+  });
 
-    const { data, error } = await client.from("users").insert([{ name, age }]);
+  if (error) {
+    c.status(500);
+    return c.json({ error: error.message });
+  } else {
+    return c.json({ message: "created" });
+  }
+});
 
-    if (error) {
-      c.status(500);
-      return c.json({ error: error.message });
-    } else {
-      return c.json({ message: "created" });
-    }
-  } catch (error: any) {
-    c.status(400);
+router.put("/:id", zValidator("json", UserSchemaUpdate), async (c) => {
+  const id = c.req.param("id");
+  const { name, age } = await c.req.valid("json");
+
+  const { data, error } = await client.from("users").select().eq("id", id).single();
+
+  if (error) {
+    c.status(500);
     return c.json({ error: error.message });
   }
+
+  const updated = await client
+    .from("users")
+    .update({ name: name ?? data.name, age: age ?? data.age })
+    .eq("id", id);
+
+  if (updated.error) {
+    c.status(500);
+    return c.json({ error: updated.error.message });
+  }
+
+  return c.json({ message: "updated" });
 });
 
 export default router;
