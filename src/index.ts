@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { env } from "./env";
-import UserRouter from "./routes/user";
+import { env } from "@/env";
+import UserRouter from "@/routes/user";
 
 const app = new Hono();
 

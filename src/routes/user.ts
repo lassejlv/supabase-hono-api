@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { client } from "../supabase";
+import { client } from "@/supabase";
 import { zValidator } from "@hono/zod-validator";
-import { UserSchemaCreate, UserSchemaUpdate } from "../types/zod";
+import { UserSchemaCreate, UserSchemaUpdate } from "@/types/zod";
 
 const router = new Hono();
 
