@@ -10,7 +10,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun --watch src/index.ts"
+    "dev": "bun --watch src/index.ts",
+    "types": "npx supabase gen types typescript --project-id skwgjoavydbfeqfjipie > src/types/database.types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.42.7",

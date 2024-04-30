@@ -41,8 +41,6 @@ router.post("/", async (c) => {
       c.status(500);
       return c.json({ error: error.message });
     } else {
-      console.log("data", data);
-
       return c.json({ message: "created" });
     }
   } catch (error: any) {
