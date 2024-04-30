@@ -1,19 +1,23 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import UserRouter from "./routes/user";
-
 import { env } from "./env";
+import UserRouter from "./routes/user";
 
 const app = new Hono();
 
 app.use(logger());
 app.use(prettyJSON());
 
-app.route("/users", UserRouter);
+app.basePath("/api").route("/users", UserRouter);
 
 app.get("/", (c) => {
-  return c.json({ message: "Hello, World!" });
+  const routes = app.routes.filter((route) => !route.path.includes("*"));
+
+  return c.json({
+    message: "Hello World!",
+    routes,
+  });
 });
 
 Bun.serve({
