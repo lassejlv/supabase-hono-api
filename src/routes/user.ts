@@ -31,16 +31,20 @@ router.get("/:id", async (c) => {
 router.post("/", zValidator("json", UserSchemaCreate), async (c) => {
   const { name, age } = await c.req.valid("json");
 
-  const { error } = await client.from("users").insert({
-    name,
-    age,
-  });
+  const { data, error } = await client
+    .from("users")
+    .insert({
+      name,
+      age,
+    })
+    .select()
+    .single();
 
   if (error) {
     c.status(500);
     return c.json({ error: error.message });
   } else {
-    return c.json({ message: "created" });
+    return c.json({ message: "created", data });
   }
 });
 
@@ -66,6 +70,19 @@ router.put("/:id", zValidator("json", UserSchemaUpdate), async (c) => {
   }
 
   return c.json({ message: "updated" });
+});
+
+router.delete("/:id", async (c) => {
+  const id = c.req.param("id");
+
+  const { data, error } = await client.from("users").delete().eq("id", id).select().single();
+
+  if (error) {
+    c.status(500);
+    return c.json({ error: error.message });
+  }
+
+  return c.json({ message: "deleted", data });
 });
 
 export default router;
